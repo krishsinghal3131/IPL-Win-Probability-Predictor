@@ -1,0 +1,26 @@
+# Import necessary libraries
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.compose import ColumnTransformer
+from sklearn.preprocessing import OneHotEncoder
+from sklearn.linear_model import LogisticRegression
+from sklearn.pipeline import Pipeline
+
+# 1. Pipeline Setup
+trf = ColumnTransformer([
+    ('trf', OneHotEncoder(sparse_output=False, drop='first'), ['batting_team', 'bowling_team', 'city'])
+], remainder='passthrough')
+
+pipe = Pipeline(steps=[
+    ('step1', trf),
+    ('step2', LogisticRegression(solver='liblinear'))
+])
+
+# 2. Fit the model
+pipe.fit(X_train, y_train)
+
+# 3. Export the model (Pickle file banayein)
+import pickle
+pickle.dump(pipe, open('pipe.pkl', 'wb'))
+
+print("Model successfully saved as pipe.pkl")
